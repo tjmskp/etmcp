@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP Quick Setup</title>
+  <style>body{font-family:Arial,sans-serif;max-width:640px;margin:32px auto;padding:12px}input,button{width:100%;padding:10px;margin:.4rem 0;box-sizing:border-box}</style>
+</head>
+<body>
+  <h1>MCP Quick Setup</h1>
+  <p>Create the first admin and basic OpenRouter settings.</p>
+  <form id="setupForm">
+    <label>Email<small>(admin user)</small></label>
+    <input name="email" value="admin@engineerstechbd.com" required />
+    <label>Role</label>
+    <input name="role" value="admin" required />
+    <label>API key <small>(leave blank generates one)</small></label>
+    <input name="api_key" />
+    <button type="submit">Setup MCP</button>
+  </form>
+  <pre id="result" style="background:#f4f4f4;padding:10px;border:1px solid #ddd; white-space:pre-wrap;"></pre>
+
+  <script>
+    document.getElementById('setupForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const response = await fetch('/setup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: form.email.value,
+          role: form.role.value,
+          api_key: form.api_key.value || undefined,
+        }),
+      });
+      const data = await response.json();
+      document.getElementById('result').textContent = JSON.stringify({ status: response.status, data }, null, 2);
+    };
+  </script>
+</body>
+</html>
